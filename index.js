@@ -4,17 +4,17 @@ const { fifaData } = require('./fifa.js')
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 1: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Practice accessing data by console.log-ing the following pieces of data note, you may want to filter the data first 😉*/
-
+const Home2014 = fifaData.filter(team => (team.Year === 2014 && team.Stage === 'Final'))
 //(a) Home Team name for 2014 world cup final
-
+console.log(Home2014[0]['Home Team Name'])
 //(b) Away Team name for 2014 world cup final
-
+console.log(Home2014[0]['Away Team Name'])
 //(c) Home Team goals for 2014 world cup final
-
+console.log(Home2014[0]['Home Team Goals'])
 //(d) Away Team goals for 2014 world cup final
-
+console.log(Home2014[0]['Away Team Goals'])
 //(e) Winner of 2014 world cup final */
-
+console.log(Home2014[0]['Home Team Name'])
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use getFinals to do the following:
@@ -24,8 +24,8 @@ Use getFinals to do the following:
 hint - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-   /* code here */
+function getFinals(data) {
+   return data.filter(team => (team.Stage === 'Final'))
 }
 
 
@@ -36,11 +36,14 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function getFinals from task 2 
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(arr, cb) {
+    let years = []
+    let finals = cb(arr)
+    finals.forEach(final => years.push(final.Year))
+    return years
 }
 
-
+//console.log(getYears(fifaData,getFinals))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher-order function getWinners to do the following:  
@@ -49,11 +52,25 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(arr,cb) {
+    let winners = []
+    let homeTeam = []
+    let awayTeam = []
+    let finals = cb(arr)
+    finals.forEach(final => homeTeam.push( [final["Home Team Name"],final["Home Team Goals"]]))
+    finals.forEach(final => awayTeam.push( [final["Away Team Name"],final["Away Team Goals"]]))
+    for (let i = 0 ; i<awayTeam.length ; i++){
+        if (homeTeam[i][1]>awayTeam[i][1]){
+            winners.push(homeTeam[i][0])
+        }
+        if (awayTeam[i][1]>homeTeam[i][1]){
+            winners.push(awayTeam[i][0])
+        }
+    }
+    return winners
 }
 
-
+//console.log(getWinners(fifaData,getFinals))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use the higher-order function getWinnersByYear to do the following:
@@ -66,8 +83,13 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(data,getFinals,getYears,getWinners) {
+ let arr =[]
+ let finalData = getFinals(data)
+for (let i =0 ; i<finalData.length;i++){
+    arr.push(`In ${getYears(finalData,getFinals)[i]}, ${getWinners(finalData,getFinals)[i]} won the world cup!`)
+}
+return arr
 }
 
 
